@@ -1,2 +1,1 @@
-# maxblog-be-template
-MaxBlog Back-end Template
+# MaxBlog 后端微服务模板
