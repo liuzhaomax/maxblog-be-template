@@ -1,0 +1,5 @@
+host: "127.0.0.1"
+port: 8848
+namespace: "5f7b12e5-9229-491f-816b-87dd82a15dea"
+dataid: "account.yaml"
+group: "dev"

@@ -1,0 +1,5 @@
+host: "127.0.0.1"
+port: 8848
+namespace: "55dde173-9dbd-4100-b348-a5a1ece89ce6"
+dataid: "account.json"
+group: "prod"
