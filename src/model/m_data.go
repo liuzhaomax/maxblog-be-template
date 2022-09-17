@@ -15,7 +15,7 @@ type MData struct {
 	Tx *gorm.DB
 }
 
-func (m MData) QueryDataById(ctx context.Context, req *pb.IdRequest) (*Data, error) {
+func (m *MData) QueryDataById(ctx context.Context, req *pb.IdRequest) (*Data, error) {
 	var data *Data
 	err := core.ExecTrans(ctx, m.Tx, func(ctx context.Context) error {
 		result := m.Tx.First(&data, req.Id)

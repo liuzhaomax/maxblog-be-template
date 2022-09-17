@@ -13,3 +13,11 @@ go get -u google.golang.org/protobuf
 ```shell
 protoc -I . --go_out=plugins=grpc:. *.proto
 ```
+
+wire
+```shell
+# 安装
+go install github.com/google/wire/cmd/wire@latest
+# 生成
+go run github.com/google/wire/cmd/wire
+```
