@@ -20,7 +20,7 @@ func (m *MData) QueryDataById(ctx context.Context, req *pb.IdRequest) (*Data, er
 	err := core.ExecTrans(ctx, m.Tx, func(ctx context.Context) error {
 		result := m.Tx.First(&data, req.Id)
 		if result.RowsAffected == 0 {
-			return errors.New("数据没找到") // TODO 错误写入core/errorx.go
+			return errors.New("数据没找到") // TODO 错误写入core/constants.go
 		}
 		return nil
 	})
