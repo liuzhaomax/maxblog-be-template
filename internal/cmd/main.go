@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
-	"github.com/golang/protobuf/protoc-gen-go/grpc"
+	"google.golang.org/grpc"
+	"maxblog-be-template/src/pb"
+	"maxblog-be-template/src/service"
 	"net"
 )
 
@@ -12,8 +15,12 @@ func main() {
 	port := flag.Int("port", 9095, "输入port")
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *ip, *port)
+
+	const ConfigDir = "env/raw/dev.yaml"
+	ctx := context.Background()
+
 	server := grpc.NewServer()
-	pb.RegisterAccountServiceServer(server, &biz.AccountServer{})
+	pb.RegisterDataServiceServer(server, &service.DataServer{})
 	listen, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)

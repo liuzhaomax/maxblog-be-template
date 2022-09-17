@@ -1,6 +1,8 @@
 .idea
 .vscode
 
+golog.txt
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

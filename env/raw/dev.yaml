@@ -1,10 +1,28 @@
-debug: false
+run_mode: "debug"
+
+server:
+  srvName: "maxblog-be-template"
+  host: "127.0.0.1"
+  port: 9300
+  tags:
+    - maxblog
+    - maxblog-be-template
+
 db:
+  type: "mysql"
+  debug: false
+  dsn: ""
+  max_life_time: 8192
+  max_open_conns: 0
+  max_idle_conns: 1000
+
+mysql:
   host: "127.0.0.1"
   port: 3306
-  dbName: "maxblog-be-template"
-  userName: "root"
+  db_name: "maxblog-be-template"
+  user_name: "root"
   password: "123456"
+  params: "charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:
   host: "127.0.0.1"
@@ -14,10 +32,3 @@ consul:
   host: "127.0.0.1"
   port: 8500
 
-server:
-  srvName: "maxblog-be-template"
-  host: "127.0.0.1"
-  port: 9095
-  tags:
-    - maxblog-be-template
-    - maxblog
