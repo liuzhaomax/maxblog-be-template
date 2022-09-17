@@ -35,8 +35,9 @@ type App struct {
 }
 
 type Server struct {
-	Host string `mapstructure:"host" json:"host"`
-	Port int    `mapstructure:"port" json:"port"`
+	Host            string `mapstructure:"host" json:"host"`
+	Port            int    `mapstructure:"port" json:"port"`
+	ShutdownTimeout int    `mapstructure:"shutdown_timeout" json:"shutdown_timeout"`
 }
 
 type DB struct {
@@ -65,8 +66,8 @@ func (mysql *Mysql) DSN() string {
 		mysql.UserName, mysql.Password, mysql.Host, mysql.Port, mysql.DBName, mysql.Params)
 }
 
-func (cfg *Config) Load(configDir string, configName string) error {
-	configPath := configDir + "/" + configName
+func (cfg *Config) Load(configDir string, configFile string) {
+	configPath := configDir + "/" + configFile
 	v := viper.New()
 	v.SetConfigFile(configPath)
 	err := v.ReadInConfig()
@@ -77,5 +78,4 @@ func (cfg *Config) Load(configDir string, configName string) error {
 	if err != nil {
 		panic(core.Config_File_Parse_Failed + core.COLON + err.Error())
 	}
-	return nil
 }
