@@ -1,12 +1,15 @@
 run_mode: "debug"
 
+app:
+  app_name: "maxblog-be-template"
+  version: "0.1.0"
+
 server:
-  srvName: "maxblog-be-template"
   host: "127.0.0.1"
   port: 9300
   tags:
-    - maxblog
     - maxblog-be-template
+    - maxblog
 
 db:
   type: "mysql"

@@ -1,8 +1,13 @@
 package model
 
 import (
-	"gorm.io/gorm"
+	"github.com/google/wire"
+	"github.com/jinzhu/gorm"
 	"maxblog-be-template/src/pb"
+)
+
+var ModelSet = wire.NewSet(
+	DataSet,
 )
 
 type Data struct {
@@ -10,7 +15,7 @@ type Data struct {
 	Mobile string `gorm:"index:idx_mobile;unique;varchar(11);not null"`
 }
 
-func Model2PB(data Data) *pb.DataRes {
+func Model2PB(data *Data) *pb.DataRes {
 	dataRes := &pb.DataRes{
 		Id:     int32(data.ID),
 		Mobile: data.Mobile,

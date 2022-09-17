@@ -1,9 +1,10 @@
-package config
+package conf
 
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	logger "github.com/sirupsen/logrus"
+	"maxblog-be-template/internal/core"
 	"maxblog-be-template/src/model"
 	"strings"
 	"time"
@@ -21,7 +22,7 @@ func (cfg *Config) NewDB() (*gorm.DB, func(), error) {
 	clean := func() {
 		err := db.Close()
 		if err != nil {
-			logger.Errorf("数据库断开连接失败: %s", err.Error())
+			logger.Errorf(core.DB_Closing_Failed+core.COLON+"%s", err.Error())
 		}
 	}
 	err = db.DB().Ping()
