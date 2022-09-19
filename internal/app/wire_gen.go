@@ -27,7 +27,6 @@ func InitInjector() (*Injector, func(), error) {
 	injector := &Injector{
 		DB:      db,
 		Service: bData,
-		Model:   mData,
 	}
 	return injector, func() {
 		cleanup()

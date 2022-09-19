@@ -5,15 +5,15 @@ package app
 
 import (
 	"github.com/google/wire"
-	"maxblog-be-template/src/model"
-	"maxblog-be-template/src/service"
+	dataModel "maxblog-be-template/src/model"
+	dataService "maxblog-be-template/src/service"
 )
 
 func InitInjector() (*Injector, func(), error) {
 	wire.Build(
 		InitDB,
-		service.ServiceSet,
-		model.ModelSet,
+		dataService.ServiceSet,
+		dataModel.ModelSet,
 		InjectorSet,
 	)
 	return new(Injector), nil, nil
