@@ -12,12 +12,13 @@ var DataSet = wire.NewSet(wire.Struct(new(BData), "*"))
 
 type BData struct {
 	MData *model.MData
+	Tx    *core.Trans
 }
 
-func (b *BData) GetDataById(ctx context.Context, req *pb.IdRequest) (*pb.DataRes, error) {
+func (bData *BData) GetDataById(ctx context.Context, req *pb.IdRequest) (*pb.DataRes, error) {
 	var data *model.Data
-	err := core.ExecTrans(ctx, b.MData.Tx, func(ctx context.Context) error {
-		err := b.MData.QueryDataById(ctx, req, data)
+	err := bData.Tx.ExecTrans(ctx, func(ctx context.Context) error {
+		err := bData.MData.QueryDataById(req, data)
 		if err != nil {
 			return err
 		}

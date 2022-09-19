@@ -3,25 +3,30 @@ package core
 import "C"
 import (
 	"context"
+	"github.com/google/wire"
 	"github.com/jinzhu/gorm"
 )
 
-type transCtx struct{}
+var TransSet = wire.NewSet(wire.Struct(new(Trans), "*"))
 
-func NewTrans(ctx context.Context, tx interface{}) context.Context {
-	return context.WithValue(ctx, transCtx{}, tx)
+type Trans struct {
+	DB *gorm.DB
 }
 
-func GetTrans(ctx context.Context) (interface{}, bool) {
-	v := ctx.Value(transCtx{})
+func (t *Trans) NewTrans(ctx context.Context, tx interface{}) context.Context {
+	return context.WithValue(ctx, Trans{}, tx)
+}
+
+func (t *Trans) GetTrans(ctx context.Context) (interface{}, bool) {
+	v := ctx.Value(Trans{})
 	return v, v != nil
 }
 
-func ExecTrans(ctx context.Context, db *gorm.DB, fn func(context.Context) error) error {
-	if _, ok := GetTrans(ctx); ok {
+func (t *Trans) ExecTrans(ctx context.Context, fn func(context.Context) error) error {
+	if _, ok := t.GetTrans(ctx); ok {
 		return fn(ctx)
 	}
-	return db.Transaction(func(tx *gorm.DB) error {
-		return fn(NewTrans(ctx, tx))
+	return t.DB.Transaction(func(db *gorm.DB) error {
+		return fn(t.NewTrans(ctx, db))
 	})
 }

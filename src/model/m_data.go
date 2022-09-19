@@ -1,7 +1,6 @@
 package model
 
 import (
-	"context"
 	"errors"
 	"github.com/google/wire"
 	"github.com/jinzhu/gorm"
@@ -11,11 +10,11 @@ import (
 var DataSet = wire.NewSet(wire.Struct(new(MData), "*"))
 
 type MData struct {
-	Tx *gorm.DB
+	DB *gorm.DB
 }
 
-func (m *MData) QueryDataById(ctx context.Context, req *pb.IdRequest, data *Data) error {
-	result := m.Tx.First(&data, req.Id)
+func (mData *MData) QueryDataById(req *pb.IdRequest, data *Data) error {
+	result := mData.DB.First(&data, req.Id)
 	if result.RowsAffected == 0 {
 		return errors.New("数据没找到") // TODO 错误写入core/constants.go
 	}

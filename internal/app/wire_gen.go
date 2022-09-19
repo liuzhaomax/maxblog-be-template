@@ -7,6 +7,7 @@
 package app
 
 import (
+	"maxblog-be-template/internal/core"
 	"maxblog-be-template/src/model"
 	"maxblog-be-template/src/service"
 )
@@ -19,10 +20,14 @@ func InitInjector() (*Injector, func(), error) {
 		return nil, nil, err
 	}
 	mData := &model.MData{
-		Tx: db,
+		DB: db,
+	}
+	trans := &core.Trans{
+		DB: db,
 	}
 	bData := &service.BData{
 		MData: mData,
+		Tx:    trans,
 	}
 	injector := &Injector{
 		DB:      db,
