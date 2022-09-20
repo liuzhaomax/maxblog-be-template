@@ -5,6 +5,7 @@ import (
 	"github.com/google/wire"
 	logger "github.com/sirupsen/logrus"
 	"maxblog-be-template/internal/core"
+	"maxblog-be-template/internal/utils"
 	"maxblog-be-template/src/model"
 	"maxblog-be-template/src/pb"
 )
@@ -26,7 +27,9 @@ func (bData *BData) GetDataById(ctx context.Context, req *pb.IdRequest) (*pb.Dat
 		return nil
 	})
 	if err != nil {
-		logger.Fatal(core.HandleError(996, err).Error())
+		logger.WithFields(logger.Fields{
+			"失败方法": utils.GetFuncName(),
+		}).Warn(core.FormatError(399, err).Error())
 		return nil, err
 	}
 	res := model.Model2PB(data)

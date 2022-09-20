@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc"
 	"maxblog-be-template/internal/conf"
 	"maxblog-be-template/internal/core"
+	"maxblog-be-template/internal/utils"
 	"maxblog-be-template/src/pb"
 	"maxblog-be-template/src/service"
 	"net"
@@ -42,20 +43,24 @@ func InitConfig(opts *options) {
 	cfg.Load(opts.ConfigDir, opts.ConfigFile)
 	logger.WithFields(logger.Fields{
 		"path": opts.ConfigDir + "/" + opts.ConfigFile,
-	}).Info(core.Config_File_Load_Succeeded)
+	}).Info(core.FormatInfo(101))
 }
 
 func InitDB() (*gorm.DB, func(), error) {
+	logger.Info(core.FormatInfo(107))
 	cfg := conf.GetInstanceOfConfig()
-	logger.Info(core.DB_Connection_Started)
 	db, clean, err := cfg.NewDB()
 	if err != nil {
-		logger.Fatal(core.DB_Connection_Failed, err)
+		logger.WithFields(logger.Fields{
+			"失败方法": utils.GetFuncName(),
+		}).Fatal(core.FormatError(801, err).Error())
 		return nil, clean, err
 	}
 	err = cfg.AutoMigrate(db)
 	if err != nil {
-		logger.Fatal(core.DB_Auto_Migration_Failed, err)
+		logger.WithFields(logger.Fields{
+			"失败方法": utils.GetFuncName(),
+		}).Fatal(core.FormatError(802, err).Error())
 		return nil, clean, err
 	}
 	return db, clean, err
@@ -72,21 +77,23 @@ func InitServer(ctx context.Context, service *service.BData) func() {
 	go func() {
 		listen, err := net.Listen("tcp", addr)
 		if err != nil {
-			logger.Fatal(core.Server_Listen_Failed, err)
-			panic(err)
+			logger.WithFields(logger.Fields{
+				"失败方法": utils.GetFuncName(),
+			}).Fatal(core.FormatError(904, err).Error())
 		}
 		logger.WithContext(ctx).Infof("Server is running at %s", addr)
 		err = server.Serve(listen)
 		if err != nil {
-			logger.Fatal(core.Server_Serve_Failed, err)
-			panic(err)
+			logger.WithFields(logger.Fields{
+				"失败方法": utils.GetFuncName(),
+			}).Fatal(core.FormatError(903, err).Error())
 		}
 	}()
 	return func() {
+		logger.Info(core.FormatInfo(103))
 		_, cancel := context.WithTimeout(ctx, time.Second*time.Duration(cfg.Server.ShutdownTimeout))
 		defer cancel()
 		server.Stop()
-		logger.Info(core.Server_Stoped)
 	}
 }
 
@@ -107,7 +114,7 @@ func Init(ctx context.Context, opts ...Option) func() {
 		"user_name": cfg.Mysql.UserName,
 		"host":      cfg.Mysql.Host,
 		"port":      cfg.Mysql.Port,
-	}).Info(core.DB_Connecetion_Succeeded)
+	}).Info(core.FormatInfo(108))
 	// init server
 	serverClean := InitServer(ctx, injector.Service)
 	return func() {
@@ -117,7 +124,7 @@ func Init(ctx context.Context, opts ...Option) func() {
 }
 
 func Launch(ctx context.Context, opts ...Option) {
-	logger.Info(core.Server_Launch_Start)
+	logger.Info(core.FormatInfo(102))
 	clean := Init(ctx, opts...)
 	cfg := conf.GetInstanceOfConfig()
 	logger.WithFields(logger.Fields{
@@ -126,14 +133,14 @@ func Launch(ctx context.Context, opts ...Option) {
 		"pid":      os.Getpid(),
 		"host":     cfg.Server.Host,
 		"port":     cfg.Server.Port,
-	}).Info(core.Server_Started)
+	}).Info(core.FormatInfo(106))
 	state := 1
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 LOOP:
 	for {
 		sig := <-sc
-		logger.WithContext(ctx).Infof("%s [%s]", core.Server_Interrupt_Received, sig.String())
+		logger.WithContext(ctx).Infof("%s [%s]", core.FormatInfo(105), sig.String())
 		switch sig {
 		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
 			state = 0
@@ -143,7 +150,7 @@ LOOP:
 			break LOOP
 		}
 	}
-	defer logger.WithContext(ctx).Infof(core.Server_Shutting_Down)
+	defer logger.WithContext(ctx).Infof(core.FormatInfo(104))
 	defer time.Sleep(time.Second)
 	defer os.Exit(state)
 	defer clean()

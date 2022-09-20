@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/google/wire"
 	"github.com/jinzhu/gorm"
+	"maxblog-be-template/internal/core"
 	"maxblog-be-template/src/pb"
 )
 
@@ -16,7 +17,7 @@ type MData struct {
 func (mData *MData) QueryDataById(req *pb.IdRequest, data *Data) error {
 	result := mData.DB.First(data, req.Id)
 	if result.RowsAffected == 0 {
-		return errors.New("数据没找到") // TODO 错误写入core/constants.go
+		return errors.New(core.FormatInfo(803))
 	}
 	return nil
 }
