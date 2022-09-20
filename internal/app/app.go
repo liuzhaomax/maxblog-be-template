@@ -61,14 +61,14 @@ func InitDB() (*gorm.DB, func(), error) {
 	return db, clean, err
 }
 
-func InitServer(ctx context.Context) func() {
+func InitServer(ctx context.Context, service *service.BData) func() {
 	cfg := conf.GetInstanceOfConfig()
 	host := flag.String("host", cfg.Server.Host, "Enter host")
 	port := flag.Int("port", cfg.Server.Port, "Enter port")
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *host, *port)
 	server := grpc.NewServer()
-	pb.RegisterDataServiceServer(server, &service.BData{})
+	pb.RegisterDataServiceServer(server, service)
 	go func() {
 		listen, err := net.Listen("tcp", addr)
 		if err != nil {
@@ -99,7 +99,7 @@ func Init(ctx context.Context, opts ...Option) func() {
 	// init config
 	InitConfig(&options)
 	// init injector and DB
-	_, injectorClean, _ := InitInjector()
+	injector, injectorClean, _ := InitInjector()
 	cfg := conf.GetInstanceOfConfig()
 	logger.WithFields(logger.Fields{
 		"db_type":   cfg.DB.Type,
@@ -109,7 +109,7 @@ func Init(ctx context.Context, opts ...Option) func() {
 		"port":      cfg.Mysql.Port,
 	}).Info(core.DB_Connecetion_Succeeded)
 	// init server
-	serverClean := InitServer(ctx)
+	serverClean := InitServer(ctx, injector.Service)
 	return func() {
 		serverClean()
 		injectorClean()

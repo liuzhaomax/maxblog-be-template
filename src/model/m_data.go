@@ -14,7 +14,7 @@ type MData struct {
 }
 
 func (mData *MData) QueryDataById(req *pb.IdRequest, data *Data) error {
-	result := mData.DB.First(&data, req.Id)
+	result := mData.DB.First(data, req.Id)
 	if result.RowsAffected == 0 {
 		return errors.New("数据没找到") // TODO 错误写入core/constants.go
 	}
