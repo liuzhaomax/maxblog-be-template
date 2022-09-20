@@ -29,7 +29,7 @@ func (bData *BData) GetDataById(ctx context.Context, req *pb.IdRequest) (*pb.Dat
 	if err != nil {
 		logger.WithFields(logger.Fields{
 			"失败方法": utils.GetFuncName(),
-		}).Warn(core.FormatError(399, err).Error())
+		}).Info(core.FormatError(803, err).Error())
 		return nil, err
 	}
 	res := model.Model2PB(data)

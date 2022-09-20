@@ -1,7 +1,6 @@
 package model
 
 import (
-	"errors"
 	"github.com/google/wire"
 	"github.com/jinzhu/gorm"
 	"maxblog-be-template/internal/core"
@@ -17,7 +16,7 @@ type MData struct {
 func (mData *MData) QueryDataById(req *pb.IdRequest, data *Data) error {
 	result := mData.DB.First(data, req.Id)
 	if result.RowsAffected == 0 {
-		return errors.New(core.FormatInfo(803))
+		return core.FormatError(803, nil)
 	}
 	return nil
 }

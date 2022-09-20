@@ -47,7 +47,7 @@ func InitConfig(opts *options) {
 }
 
 func InitDB() (*gorm.DB, func(), error) {
-	logger.Info(core.FormatInfo(107))
+	logger.Info(core.FormatInfo(108))
 	cfg := conf.GetInstanceOfConfig()
 	db, clean, err := cfg.NewDB()
 	if err != nil {
@@ -94,6 +94,7 @@ func InitServer(ctx context.Context, service *service.BData) func() {
 		_, cancel := context.WithTimeout(ctx, time.Second*time.Duration(cfg.Server.ShutdownTimeout))
 		defer cancel()
 		server.Stop()
+		logger.Info(core.FormatInfo(107))
 	}
 }
 
@@ -114,7 +115,7 @@ func Init(ctx context.Context, opts ...Option) func() {
 		"user_name": cfg.Mysql.UserName,
 		"host":      cfg.Mysql.Host,
 		"port":      cfg.Mysql.Port,
-	}).Info(core.FormatInfo(108))
+	}).Info(core.FormatInfo(109))
 	// init server
 	serverClean := InitServer(ctx, injector.Service)
 	return func() {
