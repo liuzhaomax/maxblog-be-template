@@ -19,32 +19,3 @@ func InitLogger() {
 	logrus.SetFormatter(&logrus.TextFormatter{ForceColors: cfg.Logger.Color})
 	logrus.SetOutput(io.MultiWriter(file, os.Stdout))
 }
-
-type GormLogger struct{}
-
-func (*GormLogger) Print(v ...interface{}) {
-	fileName := "golog.txt"
-	src, err := os.OpenFile(fileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"失败方法": core.GetFuncName(),
-		}).Panic(core.FormatError(902, err).Error())
-	}
-	logger := logrus.New()
-	logger.Out = src
-	logger.SetLevel(logrus.InfoLevel)
-	logger.SetFormatter(&logrus.TextFormatter{})
-	logger.SetOutput(io.MultiWriter(src, os.Stdout))
-	if v[0] == "sql" {
-		logger.WithFields(logrus.Fields{
-			"module":  "gorm",
-			"type":    "sql",
-			"rows":    v[5],
-			"src_ref": v[1],
-			"values":  v[4],
-		}).Print(v[3])
-	}
-	if v[0] == "log" {
-		logger.WithFields(logrus.Fields{"module": "gorm", "type": "log"}).Print(v[2])
-	}
-}
