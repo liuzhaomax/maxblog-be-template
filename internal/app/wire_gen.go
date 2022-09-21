@@ -25,9 +25,11 @@ func InitInjector() (*Injector, func(), error) {
 	trans := &core.Trans{
 		DB: db,
 	}
+	logger := &core.Logger{}
 	bData := &service.BData{
-		MData: mData,
-		Tx:    trans,
+		MData:   mData,
+		Tx:      trans,
+		ILogger: logger,
 	}
 	injector := &Injector{
 		DB:      db,

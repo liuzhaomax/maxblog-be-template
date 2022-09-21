@@ -14,6 +14,7 @@ func InitInjector() (*Injector, func(), error) {
 	wire.Build(
 		InitDB,
 		core.TransSet,
+		core.LoggerSet,
 		dataModel.ModelSet,
 		dataService.ServiceSet,
 		InjectorSet,

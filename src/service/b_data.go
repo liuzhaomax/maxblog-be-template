@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"github.com/google/wire"
-	logger "github.com/sirupsen/logrus"
 	"maxblog-be-template/internal/core"
 	"maxblog-be-template/internal/utils"
 	"maxblog-be-template/src/model"
@@ -13,8 +12,9 @@ import (
 var DataSet = wire.NewSet(wire.Struct(new(BData), "*"))
 
 type BData struct {
-	MData *model.MData
-	Tx    *core.Trans
+	MData   *model.MData
+	Tx      *core.Trans
+	ILogger core.ILogger
 }
 
 func (bData *BData) GetDataById(ctx context.Context, req *pb.IdRequest) (*pb.DataRes, error) {
@@ -27,11 +27,10 @@ func (bData *BData) GetDataById(ctx context.Context, req *pb.IdRequest) (*pb.Dat
 		return nil
 	})
 	if err != nil {
-		logger.WithFields(logger.Fields{
-			"失败方法": utils.GetFuncName(),
-		}).Info(err.Error())
+		bData.ILogger.LogFailure(utils.GetFuncName(), err.Error())
 		return nil, err
 	}
 	res := model.Model2PB(&data)
+	bData.ILogger.LogSuccess(utils.GetFuncName())
 	return res, nil
 }
