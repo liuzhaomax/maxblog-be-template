@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 	gormLogger "gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
-	"log"
+	"io"
 	"maxblog-be-template/internal/core"
 	"maxblog-be-template/src/model"
 	"os"
@@ -16,13 +16,20 @@ import (
 )
 
 func (cfg *Config) NewDB() (*gorm.DB, func(), error) {
+	fileName := "golog.txt"
+	logFilePath, err := os.OpenFile(fileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	logg := logger.New()
+	logg.Out = logFilePath
+	logg.SetLevel(logger.InfoLevel)
+	logg.SetFormatter(&logger.TextFormatter{ForceColors: cfg.Logger.Color})
+	logg.SetOutput(io.MultiWriter(logFilePath, os.Stdout))
 	gLogger := gormLogger.New(
-		log.New(os.Stdout, "", log.LstdFlags),
+		logg,
 		gormLogger.Config{
 			SlowThreshold:             time.Second,
 			LogLevel:                  gormLogger.Info,
 			IgnoreRecordNotFoundError: true,
-			Colorful:                  true,
+			Colorful:                  cfg.Logger.Color,
 		},
 	)
 	logger.Info(fmt.Sprintf("数据库种类: %s", cfg.DB.Type))

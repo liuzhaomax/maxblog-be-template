@@ -24,10 +24,15 @@ func GetInstanceOfConfig() *Config {
 type Config struct {
 	mux     sync.Mutex
 	RunMode string `mapstructure:"run_mode" json:"run_mode"`
+	Logger  Logger `mapstructure:"logger" json:"logger"`
 	App     App    `mapstructure:"app" json:"app"`
 	Server  Server `mapstructure:"server" json:"server"`
 	DB      DB     `mapstructure:"db" json:"db"`
 	Mysql   Mysql  `mapstructure:"mysql" json:"mysql"`
+}
+
+type Logger struct {
+	Color bool `mapstructure:"color" json:"color"`
 }
 
 type App struct {
