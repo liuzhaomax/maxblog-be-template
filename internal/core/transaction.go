@@ -4,7 +4,7 @@ import "C"
 import (
 	"context"
 	"github.com/google/wire"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 var TransSet = wire.NewSet(wire.Struct(new(Trans), "*"))

@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/google/wire"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"maxblog-be-template/internal/core"
 	"maxblog-be-template/src/pb"
 )

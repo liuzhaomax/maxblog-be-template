@@ -1,41 +1,63 @@
 package conf
 
 import (
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"fmt"
 	logger "github.com/sirupsen/logrus"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	gormLogger "gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
+	"log"
 	"maxblog-be-template/internal/core"
 	"maxblog-be-template/src/model"
+	"os"
 	"strings"
 	"time"
 )
 
 func (cfg *Config) NewDB() (*gorm.DB, func(), error) {
+	gLogger := gormLogger.New(
+		log.New(os.Stdout, "", log.LstdFlags),
+		gormLogger.Config{
+			SlowThreshold:             time.Second,
+			LogLevel:                  gormLogger.Info,
+			IgnoreRecordNotFoundError: true,
+			Colorful:                  true,
+		},
+	)
+	logger.Info(fmt.Sprintf("数据库种类: %s", cfg.DB.Type))
 	cfg.DB.DSN = cfg.Mysql.DSN()
-	db, err := gorm.Open(cfg.DB.Type, cfg.DB.DSN)
+	db, err := gorm.Open(mysql.Open(cfg.DB.DSN), &gorm.Config{
+		Logger: gLogger,
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+	})
 	if err != nil {
 		return nil, nil, err
 	}
 	if cfg.DB.Debug {
 		db = db.Debug()
 	}
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, nil, err
+	}
 	clean := func() {
-		err := db.Close()
+		err = sqlDB.Close()
 		if err != nil {
 			logger.WithFields(logger.Fields{
 				"失败方法": core.GetFuncName(),
 			}).Error(core.FormatError(800, err).Error())
 		}
 	}
-	err = db.DB().Ping()
+	err = sqlDB.Ping()
 	if err != nil {
 		return nil, clean, err
 	}
-	db.SingularTable(true)
-	db.SetLogger(&GormLogger{})
-	db.DB().SetMaxIdleConns(cfg.DB.MaxIdleConns)
-	db.DB().SetMaxOpenConns(cfg.DB.MaxOpenConns)
-	db.DB().SetConnMaxLifetime(time.Duration(cfg.DB.MaxLifetime) * time.Second)
+	sqlDB.SetMaxIdleConns(cfg.DB.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(cfg.DB.MaxOpenConns)
+	sqlDB.SetConnMaxLifetime(time.Duration(cfg.DB.MaxLifetime) * time.Second)
 	return db, clean, err
 }
 
@@ -44,9 +66,12 @@ func (cfg *Config) AutoMigrate(db *gorm.DB) error {
 	if dbType == "mysql" {
 		db = db.Set("gorm:table_options", "ENGINE=InnoDB")
 	}
-	db = db.AutoMigrate(new(model.Data))
+	err := db.AutoMigrate(new(model.Data))
+	if err != nil {
+		return err
+	}
 	cfg.createAdmin(db)
-	return db.Error
+	return nil
 }
 
 func (cfg *Config) createAdmin(db *gorm.DB) {

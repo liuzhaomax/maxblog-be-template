@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/google/wire"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"maxblog-be-template/src/service"
 )
 
