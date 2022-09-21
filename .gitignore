@@ -2,6 +2,7 @@
 .vscode
 
 golog.txt
+bin
 
 # Binaries for programs and plugins
 *.exe
