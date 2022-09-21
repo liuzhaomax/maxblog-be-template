@@ -45,6 +45,16 @@ func (cfg *Config) AutoMigrate(db *gorm.DB) error {
 	if dbType == "mysql" {
 		db = db.Set("gorm:table_options", "ENGINE=InnoDB")
 	}
-	db = db.AutoMigrate(&model.Data{})
+	db = db.AutoMigrate(new(model.Data))
+	cfg.createAdmin(db)
 	return db.Error
+}
+
+func (cfg *Config) createAdmin(db *gorm.DB) {
+	var data model.Data
+	db.First(&data)
+	if data.ID != 1 {
+		data.Mobile = "130123456789"
+		db.Create(&data)
+	}
 }
