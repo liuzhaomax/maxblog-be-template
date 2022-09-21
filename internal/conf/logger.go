@@ -4,7 +4,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"io"
 	"maxblog-be-template/internal/core"
-	"maxblog-be-template/internal/utils"
 	"os"
 )
 
@@ -17,7 +16,7 @@ func InitializeLogging(logFile string) {
 	file, err := os.OpenFile(logFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
-			"失败方法": utils.GetFuncName(),
+			"失败方法": core.GetFuncName(),
 		}).Panic(core.FormatError(902, err).Error())
 	}
 	logrus.SetOutput(io.MultiWriter(file, os.Stdout))
@@ -31,7 +30,7 @@ func (*GormLogger) Print(v ...interface{}) {
 	src, err := os.OpenFile(fileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
-			"失败方法": utils.GetFuncName(),
+			"失败方法": core.GetFuncName(),
 		}).Panic(core.FormatError(902, err).Error())
 	}
 	logger := logrus.New()

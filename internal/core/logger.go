@@ -11,7 +11,7 @@ type Logger struct{}
 
 type ILogger interface {
 	LogSuccess(funcName string)
-	LogFailure(funcName string, info string)
+	LogFailure(funcName string, err error)
 }
 
 func (l Logger) LogSuccess(funcName string) {
@@ -20,8 +20,8 @@ func (l Logger) LogSuccess(funcName string) {
 	}).Info(FormatInfo(110))
 }
 
-func (l Logger) LogFailure(funcName string, info string) {
+func (l Logger) LogFailure(funcName string, err error) {
 	logger.WithFields(logger.Fields{
 		"失败方法": funcName,
-	}).Info(info)
+	}).Info(err.Error())
 }

@@ -9,7 +9,6 @@ import (
 	"google.golang.org/grpc"
 	"maxblog-be-template/internal/conf"
 	"maxblog-be-template/internal/core"
-	"maxblog-be-template/internal/utils"
 	"maxblog-be-template/src/pb"
 	"maxblog-be-template/src/service"
 	"net"
@@ -52,14 +51,14 @@ func InitDB() (*gorm.DB, func(), error) {
 	db, clean, err := cfg.NewDB()
 	if err != nil {
 		logger.WithFields(logger.Fields{
-			"失败方法": utils.GetFuncName(),
+			"失败方法": core.GetFuncName(),
 		}).Fatal(core.FormatError(801, err).Error())
 		return nil, clean, err
 	}
 	err = cfg.AutoMigrate(db)
 	if err != nil {
 		logger.WithFields(logger.Fields{
-			"失败方法": utils.GetFuncName(),
+			"失败方法": core.GetFuncName(),
 		}).Fatal(core.FormatError(802, err).Error())
 		return nil, clean, err
 	}
@@ -78,14 +77,14 @@ func InitServer(ctx context.Context, service *service.BData) func() {
 		listen, err := net.Listen("tcp", addr)
 		if err != nil {
 			logger.WithFields(logger.Fields{
-				"失败方法": utils.GetFuncName(),
+				"失败方法": core.GetFuncName(),
 			}).Fatal(core.FormatError(904, err).Error())
 		}
 		logger.WithContext(ctx).Infof("Server is running at %s", addr)
 		err = server.Serve(listen)
 		if err != nil {
 			logger.WithFields(logger.Fields{
-				"失败方法": utils.GetFuncName(),
+				"失败方法": core.GetFuncName(),
 			}).Fatal(core.FormatError(903, err).Error())
 		}
 	}()

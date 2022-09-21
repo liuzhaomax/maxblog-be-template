@@ -5,7 +5,6 @@ import (
 	logger "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"maxblog-be-template/internal/core"
-	"maxblog-be-template/internal/utils"
 	"sync"
 )
 
@@ -75,13 +74,13 @@ func (cfg *Config) Load(configDir string, configFile string) {
 	err := v.ReadInConfig()
 	if err != nil {
 		logger.WithFields(logger.Fields{
-			"失败方法": utils.GetFuncName(),
+			"失败方法": core.GetFuncName(),
 		}).Panic(core.FormatError(900, err).Error())
 	}
 	err = v.Unmarshal(cfg)
 	if err != nil {
 		logger.WithFields(logger.Fields{
-			"失败方法": utils.GetFuncName(),
+			"失败方法": core.GetFuncName(),
 		}).Panic(core.FormatError(901, err).Error())
 	}
 }

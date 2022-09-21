@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/google/wire"
 	"maxblog-be-template/internal/core"
-	"maxblog-be-template/internal/utils"
 	"maxblog-be-template/src/model"
 	"maxblog-be-template/src/pb"
 )
@@ -27,10 +26,10 @@ func (bData *BData) GetDataById(ctx context.Context, req *pb.IdRequest) (*pb.Dat
 		return nil
 	})
 	if err != nil {
-		bData.ILogger.LogFailure(utils.GetFuncName(), err.Error())
+		bData.ILogger.LogFailure(core.GetFuncName(), err)
 		return nil, err
 	}
 	res := model.Model2PB(&data)
-	bData.ILogger.LogSuccess(utils.GetFuncName())
+	bData.ILogger.LogSuccess(core.GetFuncName())
 	return res, nil
 }

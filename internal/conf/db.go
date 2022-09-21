@@ -5,7 +5,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	logger "github.com/sirupsen/logrus"
 	"maxblog-be-template/internal/core"
-	"maxblog-be-template/internal/utils"
 	"maxblog-be-template/src/model"
 	"strings"
 	"time"
@@ -24,7 +23,7 @@ func (cfg *Config) NewDB() (*gorm.DB, func(), error) {
 		err := db.Close()
 		if err != nil {
 			logger.WithFields(logger.Fields{
-				"失败方法": utils.GetFuncName(),
+				"失败方法": core.GetFuncName(),
 			}).Error(core.FormatError(800, err).Error())
 		}
 	}
