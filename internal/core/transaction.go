@@ -1,6 +1,5 @@
 package core
 
-import "C"
 import (
 	"context"
 	"github.com/google/wire"
