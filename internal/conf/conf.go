@@ -72,8 +72,8 @@ func (mysql *Mysql) DSN() string {
 		mysql.UserName, mysql.Password, mysql.Host, mysql.Port, mysql.DBName, mysql.Params)
 }
 
-func (cfg *Config) Load(configDir string, configFile string) {
-	configPath := configDir + "/" + configFile
+func (cfg *Config) Load(configFile string) {
+	configPath := configFile
 	v := viper.New()
 	v.SetConfigFile(configPath)
 	err := v.ReadInConfig()
