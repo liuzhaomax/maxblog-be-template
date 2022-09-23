@@ -100,6 +100,7 @@ func Init(ctx context.Context, opts ...Option) func() {
 	}
 	// init config
 	InitConfig(&options)
+	logger.Info(core.FormatInfo(102))
 	// init injector and DB
 	injector, injectorClean, _ := InitInjector()
 	cfg := conf.GetInstanceOfConfig()
@@ -119,7 +120,6 @@ func Init(ctx context.Context, opts ...Option) func() {
 }
 
 func Launch(ctx context.Context, opts ...Option) {
-	logger.Info(core.FormatInfo(102))
 	clean := Init(ctx, opts...)
 	cfg := conf.GetInstanceOfConfig()
 	logger.WithFields(logger.Fields{
