@@ -27,7 +27,7 @@ mysql:
   port: 3306
   db_name: "maxblog-be-template"
   user_name: "root"
-  password: "123456"
+  password: "LZsb_Pa55w0rd"
   params: "charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:
