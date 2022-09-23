@@ -25,7 +25,7 @@ db:
 mysql:
   host: "127.0.0.1"
   port: 3306
-  db_name: "maxblog-be-template"
+  db_name: "maxblog_be_template"
   user_name: "root"
   password: "123456"
   params: "charset=utf8mb4&parseTime=True&loc=Local"
