@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
-	"flag"
 	"maxblog-be-template/internal/app"
+	"maxblog-be-template/internal/cmd/env"
 )
 
 func main() {
-	config := flag.String("c", "env/dev.yaml", "配置文件")
-	flag.Parse()
+	config := env.LoadEnv()
 	ctx := context.Background()
 	app.Launch(
 		ctx,
