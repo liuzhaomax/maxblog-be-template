@@ -6,8 +6,8 @@ package app
 import (
 	"github.com/google/wire"
 	"maxblog-be-template/internal/core"
-	dataModel "maxblog-be-template/src/model"
-	dataService "maxblog-be-template/src/service"
+	"maxblog-be-template/src/model"
+	"maxblog-be-template/src/service"
 )
 
 func InitInjector() (*Injector, func(), error) {
@@ -15,8 +15,8 @@ func InitInjector() (*Injector, func(), error) {
 		InitDB,
 		core.TransSet,
 		core.LoggerSet,
-		dataModel.ModelSet,
-		dataService.ServiceSet,
+		model.ModelSet,
+		service.ServiceSet,
 		InjectorSet,
 	)
 	return new(Injector), nil, nil
