@@ -31,3 +31,8 @@ func SetPwdEncodingOpts() {
 		HashFunction: md5.New,
 	}
 }
+
+func GetEncodePwd(pwd string) (string, string) {
+	salt, encodedPwd := password.Encode(pwd, ctx.PwdEncodingOpts)
+	return salt, encodedPwd
+}
