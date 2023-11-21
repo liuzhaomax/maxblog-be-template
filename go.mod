@@ -1,8 +1,9 @@
 module maxblog-be-template
 
-go 1.19
+go 1.21
 
 require (
+	github.com/anaskhan96/go-password-encoder v0.0.0-20201010210601-c765b799fd72
 	github.com/google/wire v0.5.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.13.0
@@ -13,7 +14,6 @@ require (
 )
 
 require (
-	github.com/anaskhan96/go-password-encoder v0.0.0-20201010210601-c765b799fd72 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
